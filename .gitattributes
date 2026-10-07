@@ -1,0 +1,17 @@
+# 统一换行符，避免 Windows / macOS / Linux 之间协作时出现整文件 diff
+* text=auto eol=lf
+
+# Windows 批处理文件必须保持 CRLF，否则双击会执行失败
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# 二进制文件不做换行转换
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.zip binary
+*.rar binary
+
+# 让 GitHub 正确识别语言统计
+*.py linguist-language=Python

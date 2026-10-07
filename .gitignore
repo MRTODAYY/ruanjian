@@ -1,0 +1,42 @@
+# ===== 密钥与本地私密配置（绝对不要提交）=====
+.env.local
+.env.*.local
+*.key
+
+# 兼容旧写法：如果你仍把密钥放在 .env，它会被忽略；
+# 但推荐把密钥放进 .env.local，让 .env 可以安全提交。
+# 若你希望提交 .env，请删除下面这一行。
+.env
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# ===== Agent 运行产物 =====
+reports/
+.agent_memory/
+*.log
+
+# ===== 编辑器 / 系统 =====
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== 个人临时文件（截图、笔记等，不属于项目）=====
+*.jpg
+*.jpeg
+*.png
+*.gif
+临时*
