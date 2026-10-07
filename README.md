@@ -48,38 +48,96 @@
 
 ### 2.2 配置 API Key
 
-**如果你用双击 `.bat` 的方式，这一步已经帮你做好了**（`.env` 文件已配置好）。
+**如果你用双击 `.bat` 的方式，这一步已经帮你做好了**（`.env.local` 里已配置好）。
 
-如果你要自己配置（换 Key、换模型）：
+项目把配置拆成两个文件，目的是让「仓库能直接克隆使用」与「密钥不泄露」同时成立：
 
-```bash
-# 复制配置模板
-cp .env.example .env        # Windows: copy .env.example .env
-```
+| 文件 | 放什么 | 是否提交到 Git |
+|------|--------|----------------|
+| `.env.example` | 配置模板（占位符） | ✅ 提交 |
+| `.env` | 通用配置（**不含密钥**） | ⛔ 已被忽略 |
+| `.env.local` | **你的 API Key** | ⛔ 永久忽略，绝不提交 |
 
-编辑 `.env`，填入你的密钥（支持任何 OpenAI 兼容服务）：
+配置优先级（后者覆盖前者）：`.env` → `.env.local` → 真实环境变量。
+
+自己配置（换 Key、换模型）就是编辑 `.env.local`：
 
 ```ini
-# DeepSeek（默认，性价比高）
-CODEAGENT_BASE_URL=https://api.deepseek.com
+# .env.local
 CODEAGENT_API_KEY=sk-你的密钥
-CODEAGENT_MODEL=deepseek-chat
 
 # 也可以换成 OpenAI / 通义千问 / Kimi / 本地 Ollama：
 # CODEAGENT_BASE_URL=https://api.openai.com/v1
 # CODEAGENT_MODEL=gpt-4o-mini
 ```
 
-> 也可以不用 `.env`，直接设置环境变量 `CODEAGENT_API_KEY`，或用 `--api-key` 参数临时指定。
+> 也可以不用文件，直接设置环境变量 `CODEAGENT_API_KEY`，或用 `--api-key` 参数临时指定。
 
-### 2.3 不需要 Key 也能先跑通
+### 2.3 提交前必做：密钥安全检查
+
+```bash
+python 检查密钥.py
+```
+
+它会扫描整个项目，找出形如 `sk-xxxxx` 的真实密钥。
+
+**必须看到 `[OK] 安全检查通过` 才能提交**；若报 `[危险]`，说明有密钥要泄露了。
+
+> `.env.local`、`reports/`、`__pycache__/`、个人截图都已在 `.gitignore` 中排除。
+
+### 2.4 如何上传到 GitHub / Gitee
+
+仓库已在本地初始化并完成首次提交，你只需**创建远程仓库 + 推送**。
+
+**第 1 步：在网站上创建空仓库**
+
+* GitHub：登录 → 右上角 `+` → `New repository`
+* Gitee（国内速度快，中文界面）：登录 → 右上角 `+` → `新建仓库`
+
+填写时注意：
+
+| 选项 | 选什么 |
+|------|--------|
+| Repository name | `code-review-agent` |
+| Public / Private | 作业建议选 **Public**（老师要能访问） |
+| Initialize with README | **不要勾**（否则和本地冲突） |
+| Add .gitignore / license | **都不要勾** |
+
+**第 2 步：把本地代码推上去**
+
+在项目文件夹里按住 `Shift` + 右键 → 「在此处打开 PowerShell 窗口」，
+执行下面三行（把地址换成你自己的）：
+
+```bash
+git remote add origin https://github.com/你的用户名/code-review-agent.git
+git branch -M main
+git push -u origin main
+```
+
+推送时要求登录：GitHub **不能用账号密码**，要填 **Personal Access Token**
+（Settings → Developer settings → Personal access tokens → Generate new token，
+勾选 `repo` 权限），把它当密码粘贴进去。Gitee 则可以直接用账号密码。
+
+**第 3 步：刷新网页确认**
+
+能看到 34 个文件、README 正常显示中文，就成功了。
+
+**以后改了代码再上传**，只需三行：
+
+```bash
+git add -A
+git commit -m "说明这次改了什么"
+git push
+```
+
+### 2.5 不需要 Key 也能先跑通
 
 ```bash
 python -m agent selftest      # 16 项离线自检（工具、分析器、Agent 循环、容错）
 python -m agent review demo/sample_buggy.py --mock   # 用假 LLM 走一遍完整流程
 ```
 
-### 2.4 开始审查
+### 2.6 开始审查
 
 ```bash
 python -m agent review demo/sample_buggy.py          # 审查单个文件
