@@ -1,0 +1,33 @@
+Code Review Agent · 代码审查智能体
+Homework 1（Code Agent）提交
+
+【提交物1】源代码仓库地址
+https://github.com/MRTODAYY/ruanjian
+
+【提交物2】文档
+- README.md —— 项目说明与使用方法
+- Design.md —— 架构设计与技术决策文档
+
+【如何运行】
+本项目零第三方依赖，只需 Python 3.8+，无需 pip install 任何包。
+
+方式一（推荐，不用敲命令）：双击以下文件
+- 2-演示模式-不花钱.bat     离线演示完整流程，不消耗 API 额度
+- 1-打开网页版.bat         打开图形界面（浏览器）
+- 3-审查示例代码.bat       审查自带的示例代码
+
+方式二（命令行）：
+- python -m agent selftest                      16 项离线自检
+- python -m agent review demo/sample_buggy.py   审查示例代码
+- python -m unittest discover -s tests -t .     运行 154 个单元测试
+
+【配置说明】
+首次使用请复制 .env.example 为 .env，并新建 .env.local 填入自己的 API Key：
+    CODEAGENT_API_KEY=sk-你的密钥
+
+【项目概要】
+- 规模：25 个 Python 文件、6732 行代码
+- 工具：8 个（文件读取、AST 静态分析、坏味道检测、代码执行、测试运行等）
+- 规则：26 条静态检查规则，分四个严重级别
+- 模式：5 种（代码审查 / 代码解释 / 测试生成 / 重构建议 / 自由问答）
+- 测试：154 个单元测试，全部通过
